@@ -1,5 +1,5 @@
 import numpy as np
-
+import util
 
 class MCST:
     def __init__(self, net, cpuct=1, num_sims=25):
@@ -57,7 +57,7 @@ class MCST:
     def get_best_move(self, game):
         scores = []
         key = game.get_key()
-        sample_space = len(self.policies[key])
+        sample_space = util.SAMP_SPACE
         for move in range(sample_space):
             scores.append(self.calc_U(game, move))
         best = np.argmax(np.array(scores))
@@ -95,7 +95,7 @@ class MCST:
 
     def get_probs(self, game, temp=1):
         key = game.get_key()
-        sample_space = len(self.policies[key])
+        sample_space = util.SAMP_SPACE
 
         for i in range(self.num_sims):
             self.search(game)

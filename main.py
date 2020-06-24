@@ -7,6 +7,8 @@ if __name__ == '__main__':
     path = 'models/chess_ai'
     tr_path = 'prev_training/chess_training'
 
+    print(util.device)
+
     nnet = NNet()
     nnet.to(util.device)
 
