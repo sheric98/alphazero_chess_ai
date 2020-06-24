@@ -4,6 +4,7 @@ from network import NNet
 import chess
 
 
+
 if __name__ == '__main__':
     path = 'models/chess_ai'
     tr_path = 'prev_training/chess_training'

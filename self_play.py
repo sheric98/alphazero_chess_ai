@@ -13,7 +13,7 @@ def play_single(tree1, tree2):
         normalized_board = game.copy_and_normalize()
         tree = tree1 if game.board.turn else tree2
         move = tree.get_move(normalized_board)
-        uci_move = game.coord_to_move(move)
+        uci_move = normalized_board.coord_to_move(move)
         if player == -1:
             uci_move = encode.flip_move(uci_move)
         game.make_move(uci_move)

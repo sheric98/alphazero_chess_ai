@@ -24,7 +24,7 @@ def play_through_examples(net, thresh=15):
         board = normalized_board.get_encoded()
         training_tups.append((board, probs, player))
         move = np.random.choice(len(probs), p=probs)
-        uci_move = game.coord_to_move(move)
+        uci_move = normalized_board.coord_to_move(move)
         if player == -1:
             uci_move = encode.flip_move(uci_move)
         game.make_move(uci_move)
