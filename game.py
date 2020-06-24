@@ -40,7 +40,7 @@ class Game:
         self.board.push_uci(uci)
 
     def coord_to_move(self, ind):
-        tup = np.unravel_index(ind, (8, 8, 73))
+        tup = np.unravel_index(ind, (8, 8, 76))
         starting = (tup[0], tup[1])
         starting_alg = encode.get_alg(starting)
         plane = tup[2]

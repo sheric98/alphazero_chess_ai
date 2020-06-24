@@ -43,7 +43,7 @@ def load_prev_training(path):
     return ret
 
 
-SAMP_SPACE = 8*8*73
+SAMP_SPACE = 8*8*76
 
 
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu'

@@ -1,6 +1,7 @@
 import training as tr
 import util
 from network import NNet
+import chess
 
 
 if __name__ == '__main__':

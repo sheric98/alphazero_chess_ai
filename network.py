@@ -27,7 +27,7 @@ class FinBlock(nn.Module):
         super(FinBlock, self).__init__()
         self.convP = nn.Conv2d(channels, 2, 1, bias=False)
         self.bnP = nn.BatchNorm2d(2)
-        self.linearP = nn.Linear(8*8*2, 8*8*73)
+        self.linearP = nn.Linear(8*8*2, 8*8*76)
         self.convV = nn.Conv2d(channels, 4, 1, bias=False)
         self.bnV = nn.BatchNorm2d(4)
         self.linear1V = nn.Linear(8*8*4, 8*8*channels)

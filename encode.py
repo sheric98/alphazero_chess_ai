@@ -22,8 +22,8 @@ def get_alg(coord):
 
 def flip_move(uci_move):
     move = list(uci_move)
-    move[1] = 9 - int(move[1])
-    move[3] = 9 - int(move[3])
+    move[1] = str(9 - int(move[1]))
+    move[3] = str(9 - int(move[3]))
     return ''.join(move)
 
 
@@ -86,9 +86,9 @@ def get_diff(alg1, alg2):
     return row2 - row1, col2 - col1
 
 
-# check for pawn underpromotion
-def is_underpromotion(uci_move):
-    return len(uci_move) == 5 and uci_move[4] != 'q'
+# check for pawn promotion
+def is_promotion(uci_move):
+    return len(uci_move) == 5
 
 # map diffs to plane and back
 def generate_diff_to_plane_and_back():
@@ -113,7 +113,7 @@ def generate_diff_to_plane_and_back():
         plane_to_diff[plane] = diff
 
     # pawn under promotions
-    pawn_str = 'nbr'
+    pawn_str = 'qnbr'
     for i, char in enumerate(pawn_str):
         for j in range(3):
             horiz_diff = j - 1
@@ -130,7 +130,7 @@ diff_to_plane, plane_to_diff = generate_diff_to_plane_and_back()
 
 def get_plane_ind(uci_move):
     diff1, diff2 = get_diff(uci_move[:2], uci_move[2:4])
-    if is_underpromotion(uci_move):
+    if is_promotion(uci_move):
         char = uci_move[4]
         tup = (diff2, char)
     else:
@@ -139,7 +139,7 @@ def get_plane_ind(uci_move):
 
 
 def get_prob_mask(uci_moves):
-    mask = np.zeros((8, 8, 73), dtype=int)
+    mask = np.zeros((8, 8, 76), dtype=int)
     for uci_move in uci_moves:
         start = uci_move[:2]
         row, col = get_coord(start)
