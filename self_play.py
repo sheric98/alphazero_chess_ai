@@ -1,18 +1,23 @@
 from game import Game
 from mcst import MCST
+import encode
 
 
 # tree 1 goes first
 def play_single(tree1, tree2):
     game = Game()
     end = 2
+    player = 1
 
     while end == 2:
         normalized_board = game.copy_and_normalize()
         tree = tree1 if game.board.turn else tree2
         move = tree.get_move(normalized_board)
         uci_move = game.coord_to_move(move)
+        if player == -1:
+            uci_move = encode.flip_move(uci_move)
         game.make_move(uci_move)
+        player *= -1
         end = game.get_game_state()
 
     return end

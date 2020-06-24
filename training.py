@@ -5,6 +5,7 @@ from collections import deque as deq
 import time
 import util
 import network
+import encode
 import self_play as sp
 
 
@@ -24,6 +25,8 @@ def play_through_examples(net, thresh=15):
         training_tups.append((board, probs, player))
         move = np.random.choice(len(probs), p=probs)
         uci_move = game.coord_to_move(move)
+        if player == -1:
+            uci_move = encode.flip_move(uci_move)
         game.make_move(uci_move)
         player *= -1
         i += 1

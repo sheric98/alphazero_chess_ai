@@ -56,7 +56,6 @@ class MCST:
 
     def get_best_move(self, game):
         scores = []
-        key = game.get_key()
         sample_space = util.SAMP_SPACE
         for move in range(sample_space):
             scores.append(self.calc_U(game, move))

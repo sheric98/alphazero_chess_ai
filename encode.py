@@ -20,6 +20,13 @@ def get_alg(coord):
     return char + ind
 
 
+def flip_move(uci_move):
+    move = list(uci_move)
+    move[1] = 9 - int(move[1])
+    move[3] = 9 - int(move[3])
+    return ''.join(move)
+
+
 def encode_ep(ep):
     encoded = np.zeros((1, 8, 8), dtype=np.float32)
     if ep != '-':
@@ -134,11 +141,9 @@ def get_plane_ind(uci_move):
 def get_prob_mask(uci_moves):
     mask = np.zeros((8, 8, 73), dtype=int)
     for uci_move in uci_moves:
-        print(uci_move)
         start = uci_move[:2]
         row, col = get_coord(start)
         plane = get_plane_ind(uci_move)
-        print(plane)
         mask[row][col][plane] = 1
     return mask.flatten()
 
