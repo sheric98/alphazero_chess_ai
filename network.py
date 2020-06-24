@@ -73,8 +73,7 @@ class NNet(nn.Module):
         with torch.no_grad():
             v, p = self(inp)
 
-        return v.data.cpu().numpy()[0][0],\
-               p.exp().data.cpu.numpy()[0].reshape((8, 8, 73))
+        return v.data.cpu().numpy()[0][0], p.exp().data.cpu().numpy()[0]
 
     def calc_loss(self, v, v_targs, p, p_targs):
         v_loss = torch.sum((v.view(-1) - v_targs) ** 2) / v_targs.size()[0]
