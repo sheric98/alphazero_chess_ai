@@ -78,20 +78,3 @@ class Game:
 
     def copy_and_normalize(self):
         return self.copy_game().normalize()
-
-if __name__ == '__main__':
-    game = Game()
-    game.make_move('d2d4')
-    game.make_move('g8f6')
-    game.make_move('d4d5')
-    game.make_move('f6g8')
-    game.make_move('d5d6')
-    game.make_move('g8f6')
-    game.make_move('d6c7')
-    game.make_move('f6g8')
-    print(game.get_valid_moves())
-    uci = 'c7b8b'
-    row, col = encode.get_coord(uci)
-    plane = encode.get_plane_ind(uci)
-    print(row, col, plane)
-    print(game.coord_to_move((row, col, plane)))
