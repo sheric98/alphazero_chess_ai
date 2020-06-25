@@ -9,11 +9,11 @@ import network
 datadir = 'pgn_files/'
 
 
-def get_pgn_training(names, path):
+def get_pgn_training(names, path, save=False):
     training = []
     for name in names:
-        path = datadir + name
-        pgn = open(path)
+        pgn_path = datadir + name
+        pgn = open(pgn_path)
 
         pgn_game = chess.pgn.read_game(pgn)
         while pgn_game is not None:
@@ -42,7 +42,8 @@ def get_pgn_training(names, path):
 
         pgn.close()
 
-    util.save_prev_training(training, path)
+    if save:
+        util.save_prev_training(training, path)
     return training
 
 
