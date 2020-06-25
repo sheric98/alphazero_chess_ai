@@ -1,5 +1,5 @@
 import numpy as np
-import chess
+
 
 pieces_index = {'K': 0, 'Q': 1, 'R': 2, 'B': 3, 'N': 4, 'P': 5,
                 'k': 6, 'q': 7, 'r': 8, 'b': 9, 'n': 10, 'p': 11}

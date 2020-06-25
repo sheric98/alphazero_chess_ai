@@ -39,6 +39,12 @@ class Game:
         self.valid_moves = None
         self.board.push_uci(uci)
 
+    def make_san_move(self, san):
+        self.encoded = None
+        self.state = None
+        self.valid_moves = None
+        self.board.push_san(san)
+
     def coord_to_move(self, ind):
         tup = np.unravel_index(ind, (8, 8, 76))
         starting = (tup[0], tup[1])
@@ -57,9 +63,9 @@ class Game:
         ending_alg = encode.get_alg(ending)
         return starting_alg + ending_alg + final_char
 
-    def get_game_state(self):
+    def get_game_state(self, cd=True):
         if self.state is None:
-            self.state = self.state_map[self.board.result(claim_draw=True)]
+            self.state = self.state_map[self.board.result(claim_draw=cd)]
         return self.state
 
     def copy_game(self):

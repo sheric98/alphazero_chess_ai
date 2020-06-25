@@ -120,8 +120,11 @@ def train_one_epoch(net, training, batch_size=256, thresh=10):
     return tot_loss / N
 
 
-def train_mult_epochs(net, training, num_epochs=20):
+def train_mult_epochs(net, training, num_epochs=20, print_all=False):
     loss = 0
     for i in range(num_epochs):
         loss = train_one_epoch(net, training)
-    print('Loss is %f' % loss)
+        if print_all:
+            print('Loss after epoch %d is %f' % (i+1, loss))
+    if not print_all:
+        print('Loss is %f' % loss)
