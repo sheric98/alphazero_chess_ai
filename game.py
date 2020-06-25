@@ -73,7 +73,7 @@ class Game:
     def move_and_normalize(self, uci):
         game = self.copy_game()
         game.make_move(uci)
-        game.normalize()
+        game = game.normalize()
         return game
 
     def copy_and_normalize(self):

@@ -36,6 +36,7 @@ def play_through_examples(net, thresh=15):
     for tup in training_tups:
         train = (tup[0], end*tup[2], tup[1])
         ret.append(train)
+    print(end)
 
     return ret
 
