@@ -5,7 +5,7 @@ import encode
 
 def get_player_move(game):
     while True:
-        uci_move = str(input('input uci form of move')).lower().strip()
+        uci_move = str(input('input uci form of move:\n')).lower().strip()
         if uci_move in game.get_valid_moves():
             return uci_move
 
@@ -27,6 +27,7 @@ def play_net(net, depth=50, player=1):
                 move = encode.flip_move(uci_move)
         game.make_move(move)
 
+    print(game.board)
     end = game.get_game_state()
     if end == player:
         print('You win!')
