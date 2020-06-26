@@ -22,9 +22,9 @@ def play_net(net, depth=50, player=1):
         else:
             normalized_board = game.copy_and_normalize()
             coord = mcst.get_move(normalized_board)
-            uci_move = normalized_board.coord_to_move(coord)
+            move = normalized_board.coord_to_move(coord)
             if player == 1:  # this means the computer is -1
-                move = encode.flip_move(uci_move)
+                move = encode.flip_move(move)
         game.make_move(move)
 
     print(game.board)
