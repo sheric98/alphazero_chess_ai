@@ -46,7 +46,7 @@ def load_prev_training(path):
 def ask_question(question):
     res = ''
     while res != 'y' and res != 'n':
-        res = str(input(question + '(y/n):')).lower().strip()
+        res = str(input(question + ' (y/n):')).lower().strip()
         if res[:1] == 'y':
             return True
         if res[:1] == 'n':

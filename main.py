@@ -1,7 +1,7 @@
 import training as tr
 import util
 from network import NNet
-import chess
+import play_against_ai as play
 import supervised as sl
 
 
@@ -44,4 +44,12 @@ if __name__ == '__main__':
             nnet = NNet()
             nnet.to(util.device)
         tr.train_net(nnet, path, tr_path, start=start_iter)
+        exit(0)
+
+    res = util.ask_question('Play against net?')
+    if res:
+        nnet = util.load_net(path)
+        next_res = util.ask_question('Would you like to go first?')
+        player = 1 if next_res else -1
+        play.play_net(nnet, player=player)
         exit(0)
