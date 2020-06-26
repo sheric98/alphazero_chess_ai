@@ -9,16 +9,28 @@ import encode
 import self_play as sp
 
 
-def play_through_examples(net, thresh=15):
+def play_through_examples(net, thresh=15, max_moves=1000, preds=None):
     i = 0
     game = Game()
-    mcst = MCST(net)
+    mcst = MCST(net, preds=preds)
     end = 2
     training_tups = []
     player = 1
 
     while end == 2:
         normalized_board = game.copy_and_normalize()
+        v, p = mcst.get_pred(normalized_board)
+
+        # check for early termination
+        v *= player
+        if i >= max_moves:
+            end = game.early_rollout(v)
+            break
+        resign = game.check_resign(v)
+        if resign is not None:
+            end = resign
+            break
+
         temp = 1 if i < thresh else 0
         probs = mcst.get_probs(normalized_board, temp)
         board = normalized_board.get_encoded()
@@ -32,6 +44,7 @@ def play_through_examples(net, thresh=15):
         i += 1
 
         end = game.get_game_state()
+
     ret = []
     for tup in training_tups:
         train = (tup[0], end*tup[2], tup[1])
@@ -56,8 +69,10 @@ def train_net(net, path, training_path, niters=100, neps=100,
         print('Starting iter %d' % (i + 1))
         start = time.time()
         iter_training = deq([], maxlen=queue_cap)
+
+        pred_dict = {}
         for j in range(neps):
-            train = play_through_examples(curr_net)
+            train = play_through_examples(curr_net, preds=pred_dict)
             iter_training.extend(train)
 
         prev_training.append(iter_training)

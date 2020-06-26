@@ -12,6 +12,7 @@ class Game:
             self.board = chess.Board()
         else:
             self.board = board
+        self.key = None
         self.encoded = None
         self.valid_moves = None
         self.state = None
@@ -23,7 +24,9 @@ class Game:
         return self.encoded
 
     def get_key(self):
-        return self.get_encoded().tobytes()
+        if self.key is None:
+            self.key = self.get_encoded().tobytes()
+        return self.key
 
     def get_valid_moves(self):
         if self.valid_moves is None:
@@ -33,16 +36,18 @@ class Game:
     def get_mask(self):
         return encode.get_prob_mask(self.get_valid_moves())
 
-    def make_move(self, uci):
+    def reset_params(self):
         self.encoded = None
         self.state = None
         self.valid_moves = None
+        self.key = None
+
+    def make_move(self, uci):
+        self.reset_params()
         self.board.push_uci(uci)
 
     def make_san_move(self, san):
-        self.encoded = None
-        self.state = None
-        self.valid_moves = None
+        self.reset_params()
         self.board.push_san(san)
 
     def coord_to_move(self, ind):
@@ -84,3 +89,19 @@ class Game:
 
     def copy_and_normalize(self):
         return self.copy_game().normalize()
+
+    def early_rollout(self, value):
+        player = 1 if self.board.turn else -1
+        if abs(value) < 0.01:
+            return 0
+        elif value >= 0.01:
+            return player
+        else:
+            return -player
+
+    def check_resign(self, value, thresh=-0.8):
+        player = 1 if self.board.turn else -1
+        if value < thresh:
+            return -player
+        else:
+            return None

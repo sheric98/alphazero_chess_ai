@@ -2,7 +2,7 @@ import numpy as np
 import util
 
 class MCST:
-    def __init__(self, net, cpuct=1, num_sims=25):
+    def __init__(self, net, cpuct=1, num_sims=25, preds=None):
         self.net = net
         self.cpuct = cpuct
         self.num_sims = num_sims
@@ -12,14 +12,24 @@ class MCST:
         self.masks = {}
         self.board_vals = {}
         self.policies = {}
+        if preds is None:
+            self.preds = {}
+        else:
+            self.preds = preds
 
     def is_expanded(self, game):
         key = game.get_key()
         return key in self.policies
 
+    def get_pred(self, game):
+        key = game.get_key()
+        if key not in self.preds:
+            self.preds[key] = self.net.predict(game)
+        return self.preds[key]
+
     def expand(self, game):
         key = game.get_key()
-        v, p = self.net.predict(game)
+        v, p = self.get_pred(game)
         self.masks[key] = game.get_mask()
         p *= self.masks[key]
         div = np.sum(p)

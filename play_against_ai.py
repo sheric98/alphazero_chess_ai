@@ -25,6 +25,7 @@ def play_net(net, depth=50, player=1):
             move = normalized_board.coord_to_move(coord)
             if player == 1:  # this means the computer is -1
                 move = encode.flip_move(move)
+            print('CPU makes move ' + move)
         game.make_move(move)
 
     print(game.board)
