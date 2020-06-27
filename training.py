@@ -9,24 +9,26 @@ import encode
 import self_play as sp
 
 
-def play_through_examples(net, thresh=15, max_moves=1000, preds=None):
+def play_through_examples(net, thresh=15, max_moves=500, preds=None,
+                          use_self_val=False):
     i = 0
     game = Game()
-    mcst = MCST(net, preds=preds)
+    mcst = MCST(net, preds=preds, early_term=True)
     end = 2
     training_tups = []
     player = 1
 
     while end == 2:
         normalized_board = game.copy_and_normalize()
-        v, p = mcst.get_pred(normalized_board)
-
-        # check for early termination
-        v *= player
-        if i >= max_moves:
-            end = game.early_rollout(v)
+        if use_self_val:
+            v, p = mcst.get_pred(normalized_board)
+            v *= player
+        else:
+            v = None
+        if game.get_full_moves() >= max_moves:
+            end = game.early_rollout(value=v)
             break
-        resign = game.check_resign(v)
+        resign = game.check_resign(value=v)
         if resign is not None:
             end = resign
             break
@@ -49,7 +51,6 @@ def play_through_examples(net, thresh=15, max_moves=1000, preds=None):
     for tup in training_tups:
         train = (tup[0], end*tup[2], tup[1])
         ret.append(train)
-    print(end)
 
     return ret
 
@@ -96,7 +97,10 @@ def train_net(net, path, training_path, niters=100, neps=100,
         end2 = time.time()
         print('Training Model: %f seconds' % (end2 - end1))
 
-        comp = sp.compare_nets(curr_net, prev_net)
+        new_pred_dict = {}
+
+        comp = sp.compare_nets(curr_net, prev_net, prev_pred_dict=pred_dict,
+                               new_pred_dict=new_pred_dict)
 
         end3 = time.time()
         print('Final Comparison: %f seconds' % (end3 - end2))

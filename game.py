@@ -3,6 +3,7 @@ import encode
 import copy
 import util
 import numpy as np
+import scoring
 
 
 # wrapper for chess board
@@ -15,6 +16,7 @@ class Game:
         self.key = None
         self.encoded = None
         self.valid_moves = None
+        self.canon_val = None
         self.state = None
         self.state_map = {'*': 2, '1-0': 1, '0-1': -1, '1/2-1/2': 0}
 
@@ -33,8 +35,16 @@ class Game:
             self.valid_moves = set(map(lambda x: x.uci(), self.board.legal_moves))
         return self.valid_moves
 
+    def get_full_moves(self):
+        return self.board.fullmove_number
+
     def get_mask(self):
         return encode.get_prob_mask(self.get_valid_moves())
+
+    def get_canon_val(self):
+        if self.canon_val is None:
+            self.canon_val = scoring.eval_board(self.board)
+        return self.canon_val
 
     def reset_params(self):
         self.encoded = None
@@ -90,7 +100,9 @@ class Game:
     def copy_and_normalize(self):
         return self.copy_game().normalize()
 
-    def early_rollout(self, value):
+    def early_rollout(self, value=None):
+        if value is None:
+            value = self.get_canon_val()
         player = 1 if self.board.turn else -1
         if abs(value) < 0.01:
             return 0
@@ -99,7 +111,9 @@ class Game:
         else:
             return -player
 
-    def check_resign(self, value, thresh=-0.8):
+    def check_resign(self, value=None, thresh=-0.8):
+        if value is None:
+            value = self.get_canon_val()
         player = 1 if self.board.turn else -1
         if value < thresh:
             return -player
