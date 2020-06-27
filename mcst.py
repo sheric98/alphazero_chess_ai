@@ -2,7 +2,8 @@ import numpy as np
 import util
 
 class MCST:
-    def __init__(self, net, cpuct=1, num_sims=25, preds=None):
+    def __init__(self, net, cpuct=1, num_sims=25, preds=None,
+                 early_term=False, use_self_val=False, max_moves=500):
         self.net = net
         self.cpuct = cpuct
         self.num_sims = num_sims
@@ -12,6 +13,9 @@ class MCST:
         self.masks = {}
         self.board_vals = {}
         self.policies = {}
+        self.early_term = early_term
+        self.use_self_val = use_self_val
+        self.max_moves = max_moves
         if preds is None:
             self.preds = {}
         else:
@@ -46,7 +50,20 @@ class MCST:
     def get_value(self, game):
         key = game.get_key()
         if key not in self.board_vals:
-            self.board_vals[key] = game.get_game_state()
+            end = game.get_game_state()
+            # check for early rollout
+            if end == 2 and self.early_term:
+                if self.use_self_val:
+                    v, p = self.get_pred(game)
+                else:
+                    v = None
+                if game.get_full_moves() >= self.max_moves:
+                    end = game.early_rollout(value=v)
+                else:
+                    resign = game.check_resign(value=v)
+                    if resign is not None:
+                        end = resign
+            self.board_vals[key] = end
         return self.board_vals[key]
 
     def calc_U(self, game, move):

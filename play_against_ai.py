@@ -5,9 +5,11 @@ import encode
 
 def get_player_move(game):
     while True:
-        uci_move = str(input('input uci form of move:\n')).lower().strip()
-        if uci_move in game.get_valid_moves():
-            return uci_move
+        move = str(input('input uci/san form of move:\n')).strip()
+        if move in game.get_valid_moves():
+            return move, 'uci'
+        if move in set(game.board.legal_moves):
+            return move, 'san'
 
 
 def play_net(net, depth=50, player=1):
@@ -18,7 +20,7 @@ def play_net(net, depth=50, player=1):
         player_to_move = 1 if game.board.turn else -1
         if player_to_move == player:
             print(game.board)
-            move = get_player_move(game)
+            move, form = get_player_move(game)
         else:
             normalized_board = game.copy_and_normalize()
             coord = mcst.get_move(normalized_board)
@@ -26,7 +28,11 @@ def play_net(net, depth=50, player=1):
             if player == 1:  # this means the computer is -1
                 move = encode.flip_move(move)
             print('CPU makes move ' + move)
-        game.make_move(move)
+            form = 'uci'
+        if form == 'uci':
+            game.make_move(move)
+        else:
+            game.make_san_move(move)
 
     print(game.board)
     end = game.get_game_state()
