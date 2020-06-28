@@ -51,6 +51,7 @@ class Game:
         self.state = None
         self.valid_moves = None
         self.key = None
+        self.canon_val = None
 
     def make_move(self, uci):
         self.reset_params()
