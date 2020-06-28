@@ -73,8 +73,11 @@ def train_net(net, path, training_path, niters=100, neps=100,
 
         pred_dict = {}
         for j in range(neps):
+            nepstart = time.time()
             train = play_through_examples(curr_net, preds=pred_dict)
             iter_training.extend(train)
+            nepend = time.time()
+            print('nep iteration %d: %f' % (j, nepend - nepstart))
 
         prev_training.append(iter_training)
 
